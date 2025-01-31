@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>90s Retro 3D Playground</title>
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4A90A8;
+            --brick-pattern: repeating-linear-gradient(
+                45deg,
+                var(--primary-color),
+                var(--primary-color) 10px,
+                #3d7a8f 10px,
+                #3d7a8f 20px
+            );
+        }
+
+        body {
+            background: #f0f0f0;
+            font-family: 'VT323', monospace;
+        }
+
+        .retro-container {
+            background: var(--brick-pattern);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .retro-button {
+            transition: all 0.2s;
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+        }
+
+        .retro-button:hover {
+            transform: translateZ(30px) scale(1.1);
+        }
+
+        .retro-card {
+            transition: transform 0.3s;
+            transform-style: preserve-3d;
+        }
+
+        .retro-card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .pixel-border {
+            box-shadow: 
+                5px 5px 0 rgba(0,0,0,0.3),
+                inset -3px -3px 0 rgba(0,0,0,0.2),
+                inset 3px 3px 0 rgba(255,255,255,0.2);
+        }
+
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="retro-container min-h-screen p-4 md:p-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header Section -->
+            <header class="bg-white p-6 rounded-lg pixel-border mb-8">
+                <h1 class="text-4xl md:text-6xl font-['Press_Start_2P'] text-center text-primary-color mb-4">RETRO WAVE</h1>
+                <p class="text-2xl text-center">Welcome to the digital playground</p>
+            </header>
+
+            <!-- Grid Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Interactive Cards -->
+                <div class="retro-card bg-white p-6 rounded-lg pixel-border">
+                    <i class="bi bi-joystick text-5xl text-primary-color"></i>
+                    <h2 class="text-2xl mt-4">GAMES</h2>
+                    <p class="mt-2">Classic arcade feel</p>
+                </div>
+
+                <div class="retro-card bg-white p-6 rounded-lg pixel-border">
+                    <i class="bi bi-music-note-beamed text-5xl text-primary-color"></i>
+                    <h2 class="text-2xl mt-4">MUSIC</h2>
+                    <p class="mt-2">Synthwave vibes</p>
+                </div>
+
+                <div class="retro-card bg-white p-6 rounded-lg pixel-border">
+                    <i class="bi bi-cpu text-5xl text-primary-color"></i>
+                    <h2 class="text-2xl mt-4">TECH</h2>
+                    <p class="mt-2">Digital dreams</p>
+                </div>
+            </div>
+
+            <!-- Interactive Elements Section -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg pixel-border">
+                    <h3 class="text-2xl mb-4">Interactive Zone</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="retro-button bg-primary-color text-white px-6 py-3 rounded pixel-border">
+                            PRESS ME
+                        </button>
+                        <button class="retro-button bg-primary-color text-white px-6 py-3 rounded pixel-border">
+                            CLICK ME
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg pixel-border">
+                    <h3 class="text-2xl mb-4">Message Board</h3>
+                    <div id="messageBoard" class="h-32 bg-black text-green-400 p-4 font-mono overflow-hidden">
+                        > Loading retro experience...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanline Effect -->
+        <div class="scanline fixed top-0 left-0 w-full h-full pointer-events-none"></div>
+    </div>
+
+    <script>
+        // Message Board Animation
+        const messages = [
+            "> Loading retro experience...",
+            "> Initializing vintage protocols...",
+            "> Running nostalgia.exe...",
+            "> Ready to rock!"
+        ];
+
+        let currentMessage = 0;
+        const messageBoard = document.getElementById('messageBoard');
+
+        setInterval(() => {
+            messageBoard.innerHTML = messages[currentMessage];
+            currentMessage = (currentMessage + 1) % messages.length;
+        }, 2000);
+
+        // Interactive Button Effects
+        document.querySelectorAll('.retro-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'translateZ(10px) scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'translateZ(20px) scale(1)';
+                }, 100);
+            });
+        });
+
+        // Card Tilt Effect
+        document.querySelectorAll('.retro-card').forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                this.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'rotateX(0) rotateY(0)';
+            });
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
